@@ -46,11 +46,8 @@
     <h2>🔐 AI Phishing Detection System</h2>
 
     <form action="/predict" method="post">
-        <label>URL Length:</label><br>
-        <input type="number" name="url_length" required><br>
-
-        <label>HTTPS (1 = Yes, 0 = No):</label><br>
-        <input type="number" name="has_https" required><br>
+        <label>Enter Website URL:</label><br>
+        <input type="text" name="url" required><br>
 
         <button type="submit">Predict</button>
     </form>
