@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import pickle
 import os
@@ -6,66 +5,103 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
 
-# ==============================
-# Load Dataset
-# ==============================
+# ==================================
+# Safe Base Directory
+# ==================================
 
-data = pd.read_csv("data/phishing_data.csv")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model_path = os.path.join(BASE_DIR, "models", "phishing_model.pkl")
+scaler_path = os.path.join(BASE_DIR, "models", "scaler.pkl")
 
-# ==============================
-# Feature Engineering
-# ==============================
+# ==================================
+# Synthetic Dataset Generator
+# ==================================
 
-def extract_features(url):
-    url_length = len(url)
-    has_https = 1 if url.startswith("https") else 0
-    dot_count = url.count(".")
-    has_at = 1 if "@" in url else 0
-    suspicious_words = ["login", "verify", "secure", "update", "free", "bank"]
-    has_suspicious = 1 if any(word in url.lower() for word in suspicious_words) else 0
+def generate_dataset(n_samples=2000):
+    X = []
+    y = []
 
-    return [url_length, has_https, dot_count, has_at, has_suspicious]
+    for _ in range(n_samples):
+        # Random URL length
+        url_length = np.random.randint(10, 120)
+
+        # HTTPS probability
+        has_https = np.random.choice([0, 1], p=[0.4, 0.6])
+
+        # Dot count
+        dot_count = np.random.randint(1, 6)
+
+        # @ symbol probability
+        has_at = np.random.choice([0, 1], p=[0.9, 0.1])
+
+        # Suspicious words probability
+        has_suspicious = np.random.choice([0, 1], p=[0.7, 0.3])
+
+        # Simple rule for labeling
+        risk_score = (
+            (url_length > 70) +
+            (has_https == 0) +
+            (dot_count > 3) +
+            has_at +
+            has_suspicious
+        )
+
+        label = 0 if risk_score >= 2 else 1
+        # 0 = Phishing
+        # 1 = Legitimate
+
+        X.append([url_length, has_https, dot_count, has_at, has_suspicious])
+        y.append(label)
+
+    return np.array(X), np.array(y)
 
 
-# Apply feature extraction
-data["features"] = data["url"].apply(extract_features)
+# ==================================
+# Generate Data
+# ==================================
 
-X = np.array(data["features"].tolist())
-y = data["label"]
+print("Generating synthetic dataset...")
+X, y = generate_dataset(3000)
 
-# ==============================
-# Train Test Split
-# ==============================
+print("Dataset Generated Successfully!")
+print("Total Samples:", len(X))
+
+# ==================================
+# Train-Test Split
+# ==================================
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# ==============================
+# ==================================
 # Scaling
-# ==============================
+# ==================================
 
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# ==============================
+# ==================================
 # Train Model
-# ==============================
+# ==================================
 
-model = RandomForestClassifier()
+print("Training model...")
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
 model.fit(X_train, y_train)
 
 accuracy = model.score(X_test, y_test)
-print("Model Accuracy:", accuracy)
+print("Model Accuracy:", round(accuracy * 100, 2), "%")
 
-# ==============================
+# ==================================
 # Save Model
-# ==============================
+# ==================================
 
-os.makedirs("models", exist_ok=True)
+os.makedirs(os.path.join(BASE_DIR, "models"), exist_ok=True)
 
-pickle.dump(model, open("models/phishing_model.pkl", "wb"))
-pickle.dump(scaler, open("models/scaler.pkl", "wb"))
+pickle.dump(model, open(model_path, "wb"))
+pickle.dump(scaler, open(scaler_path, "wb"))
 
 print("Model and Scaler saved successfully!")
+print("Training Complete ✅")
