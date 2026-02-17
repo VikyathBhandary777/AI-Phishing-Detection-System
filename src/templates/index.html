@@ -2,61 +2,101 @@
 <html>
 <head>
     <title>AI Phishing Detection</title>
+
     <style>
         body {
-            font-family: Arial;
-            background-color: #f2f2f2;
-            text-align: center;
-            padding-top: 80px;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
-        .container {
-            background: white;
-            width: 400px;
-            margin: auto;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px gray;
+        .card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            padding: 40px;
+            width: 420px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+            color: white;
+        }
+
+        h2 {
+            margin-bottom: 25px;
         }
 
         input {
-            width: 90%;
-            padding: 8px;
-            margin: 8px 0;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 14px;
         }
 
         button {
-            padding: 10px 20px;
-            background-color: blue;
-            color: white;
+            width: 100%;
+            padding: 12px;
+            background: #00c6ff;
             border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #0072ff;
         }
 
         .result {
-            margin-top: 20px;
-            font-size: 18px;
+            margin-top: 25px;
+            padding: 12px;
+            border-radius: 8px;
             font-weight: bold;
+        }
+
+        .safe {
+            background: rgba(0, 255, 150, 0.2);
+            color: #00ffae;
+        }
+
+        .phishing {
+            background: rgba(255, 80, 80, 0.2);
+            color: #ff4d4d;
         }
     </style>
 </head>
 
 <body>
 
-<div class="container">
-    <h2>🔐 AI Phishing Detection System</h2>
+<div class="card">
+    <h2>🔐 AI Phishing Detection</h2>
 
     <form action="/predict" method="post">
-        <label>Enter Website URL:</label><br>
-        <input type="text" name="url" required><br>
-
-        <button type="submit">Predict</button>
+        <input type="text" name="url" placeholder="Enter Website URL..." required>
+        <button type="submit">Analyze Website</button>
     </form>
 
     {% if prediction_text %}
-    <div class="result">
-        {{ prediction_text }}
-    </div>
+        {% if "Legitimate" in prediction_text %}
+            <div class="result safe">
+                {{ prediction_text }}
+            </div>
+        {% else %}
+            <div class="result phishing">
+                {{ prediction_text }}
+            </div>
+        {% endif %}
     {% endif %}
+
 </div>
 
 </body>
