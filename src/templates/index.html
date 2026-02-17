@@ -7,70 +7,96 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #0f0f0f, #1a1a1a);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: #fff;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
+            background: #111;
+            border: 2px solid gold;
             padding: 40px;
-            width: 420px;
+            width: 450px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
             text-align: center;
-            color: white;
+            position: relative;
+        }
+
+        .sticker {
+            position: absolute;
+            top: -25px;
+            right: -25px;
+            font-size: 40px;
         }
 
         h2 {
+            color: gold;
             margin-bottom: 25px;
+            letter-spacing: 1px;
         }
 
         input {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-top: 10px;
             margin-bottom: 20px;
             border-radius: 8px;
-            border: none;
-            outline: none;
+            border: 1px solid gold;
+            background: #000;
+            color: gold;
             font-size: 14px;
+        }
+
+        input::placeholder {
+            color: #aaa;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background: #00c6ff;
+            padding: 14px;
+            background: linear-gradient(45deg, gold, #ffcc00);
             border: none;
             border-radius: 8px;
-            color: white;
+            color: black;
             font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
         }
 
         button:hover {
-            background: #0072ff;
+            box-shadow: 0 0 15px gold;
+            transform: scale(1.05);
         }
 
         .result {
             margin-top: 25px;
-            padding: 12px;
+            padding: 14px;
             border-radius: 8px;
             font-weight: bold;
+            font-size: 16px;
         }
 
         .safe {
-            background: rgba(0, 255, 150, 0.2);
+            background: rgba(0, 255, 150, 0.15);
             color: #00ffae;
+            border: 1px solid #00ffae;
         }
 
         .phishing {
-            background: rgba(255, 80, 80, 0.2);
+            background: rgba(255, 80, 80, 0.15);
             color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+        }
+
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
         }
     </style>
 </head>
@@ -78,7 +104,9 @@
 <body>
 
 <div class="card">
-    <h2>🔐 AI Phishing Detection</h2>
+    <div class="sticker">🛡️</div>
+
+    <h2>AI Phishing Detection</h2>
 
     <form action="/predict" method="post">
         <input type="text" name="url" placeholder="Enter Website URL..." required>
@@ -96,6 +124,10 @@
             </div>
         {% endif %}
     {% endif %}
+
+    <div class="footer">
+        🔐 Secure • AI Powered • Cloud Deployed
+    </div>
 
 </div>
 
